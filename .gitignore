@@ -1,0 +1,61 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+.venv/
+env/
+.env
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# Data / models (avoid committing large files)
+*.parquet
+*.arrow
+*.bin
+*.pt
+*.pth
+*.onnx
+*.safetensors
+data/
+models/
+*.db
+*.sqlite
+
+# Logs and temp
+*.log
+tmp/
+temp/
+.cache/
+
+# Secrets
+.env
+.env.*
+*.pem
+secrets/
+
+# Node (if any tooling uses it)
+node_modules/
+npm-debug.log*
+
+# Local config overrides
+*.local
+config.local.*
