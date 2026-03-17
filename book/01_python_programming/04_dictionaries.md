@@ -55,9 +55,9 @@ d.pop("a")          # remove key
 
 ```mermaid
 flowchart LR
-    K[Key] --> H[hash(key)]
-    H --> B[bucket]
-    B --> V[value]
+    K["Key"] --> H["hash of key"]
+    H --> B["bucket"]
+    B --> V["value"]
 ```
 
 ---
