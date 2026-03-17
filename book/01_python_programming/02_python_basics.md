@@ -79,9 +79,9 @@ val = lst[0]
 
 ```mermaid
 flowchart LR
-    A[List] --> B[append O(1)]
-    A --> C[index O(1)]
-    A --> D[insert/pop O(n)]
+    A["List"] --> B["append O(1)"]
+    A --> C["index O(1)"]
+    A --> D["insert/pop O(n)"]
 ```
 
 ### Exercises — Lists
@@ -111,7 +111,7 @@ print(rev)
 
 ```mermaid
 flowchart LR
-A[1,2,3,4] --> B[reverse] --> C[4,3,2,1]
+    A["1,2,3,4"] --> B["reverse"] --> C["4,3,2,1"]
 ```
 
 2. Remove duplicates
@@ -185,9 +185,9 @@ user["email"] = "sourav@example.com"
 
 ```mermaid
 flowchart LR
-    K[Key] --> H[hash(key)]
-    H --> B[bucket]
-    B --> V[value]
+    K["Key"] --> H["hash of key"]
+    H --> B["bucket"]
+    B --> V["value"]
 ```
 
 ### Exercises — Dictionaries
@@ -650,13 +650,13 @@ To isolate dependencies for each project and avoid conflicts
 
 ```mermaid
 flowchart TD
-    A[Primitives] --> B[Data Structures]
-    B --> C[Lists]
-    B --> D[Dictionaries]
-    B --> E[Sets/Tuples]
-    C --> F[Comprehensions]
-    D --> G[Hashing]
-    F --> H[Generators]
+    A["Primitives"] --> B["Data Structures"]
+    B --> C["Lists"]
+    B --> D["Dictionaries"]
+    B --> E["Sets/Tuples"]
+    C --> F["Comprehensions"]
+    D --> G["Hashing"]
+    F --> H["Generators"]
 ```
 
 ---
