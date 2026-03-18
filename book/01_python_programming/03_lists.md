@@ -57,9 +57,9 @@ lst[1]               # access
 
 ```mermaid
 flowchart LR
-    A[List] --> B[Append O(1)]
-    A --> C[Index O(1)]
-    A --> D[Insert/Delete O(n)]
+    A[List] --> B["Append O(1)"]
+    A --> C["Index O(1)"]
+    A --> D["Insert/Delete O(n)"]
 ```
 
 ---
