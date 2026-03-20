@@ -218,6 +218,7 @@ Topics:
 - backpropagation
 - training loops
 - PyTorch fundamentals
+- JAX basics
 
 Understanding these systems helps engineers support training pipelines.
 
@@ -270,6 +271,7 @@ Topics:
 - hybrid search
 - retrieval strategies
 - agentic RAG
+- orchestration frameworks (LangChain, LlamaIndex)
 
 These systems power many modern AI products.
 
@@ -285,12 +287,14 @@ Topics:
 - batching
 - KV cache
 - token streaming
+- API serving (FastAPI)
 
 Tools:
 
 - vLLM
 - Triton Inference Server
 - Ray Serve
+- FastAPI
 
 These systems enable scalable AI services.
 
@@ -492,11 +496,11 @@ This document is the single source of truth for the learning path from fundament
 | 05 | Data Storage & Lakehouse | Parquet, Arrow, Delta, Iceberg, Hudi, LakeFS |
 | 06 | Distributed Systems | CAP, replication, partitioning, consensus, scaling |
 | 07 | Machine Learning Foundations | Regression, classification, clustering, PCA, evaluation |
-| 08 | Deep Learning | Neural nets, backprop, PyTorch basics |
+| 08 | Deep Learning | Neural nets, backprop, PyTorch, JAX |
 | 09 | Transformers & LLM Core | Attention, tokenization, scaling laws |
 | 10 | Embeddings & Vector DBs | Embeddings, ANN, FAISS, Milvus, Qdrant, pgvector |
-| 11 | RAG Systems | RAG architecture, chunking, hybrid search, agentic RAG |
-| 12 | AI Infrastructure & Inference | LLM inference, KV cache, vLLM, Triton, Ray Serve |
+| 11 | RAG Systems | RAG architecture, chunking, hybrid search, agentic RAG, orchestration frameworks (LangChain, LlamaIndex) |
+| 12 | AI Infrastructure & Inference | LLM inference, KV cache, vLLM, Triton, Ray Serve, FastAPI |
 | 13 | GPU Systems | GPU architecture, CUDA, distributed training |
 | 14 | Evaluation Frameworks | RAG eval, RAGAS, benchmarks, A/B testing |
 | 15 | Observability & Monitoring | Tracing, latency, Langfuse, OpenTelemetry, Prometheus |

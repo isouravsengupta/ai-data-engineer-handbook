@@ -181,29 +181,9 @@ flowchart LR
 
 ```mermaid
 flowchart TD
-    A[Open Notebook] --> B[Write Code in Cell]
+    A[Open Colab] --> B[Write Code in Cell]
     B --> C[Run Cell]
     C --> D[See Output]
-```
-
-```python
-print("Hello from Colab")
-```
-
-4. Install packages if needed:
-
-```python
-!pip install pandas
-```
-
----
-
-### Diagram — Cloud Workflow
-
-```mermaid
-flowchart TD
-    A[Open Colab] --> B[Write Code]
-    B --> C[Run Cell]
 ```
 
 ---
@@ -247,14 +227,6 @@ flowchart TD
     B --> C[Run]
     C --> D[View Output]
 ```
-
-```mermaid
-flowchart TD
-    A[Open Website] --> B[Write Code]
-    B --> C[Run]
-```
-
-##
 
 ---
 
