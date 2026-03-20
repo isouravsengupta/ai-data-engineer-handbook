@@ -1,0 +1,142 @@
+% =============================================================================
+% AI Data Engineer Resume — LaTeX template
+% =============================================================================
+% Location: book/20_resume_linkedin/ai_data_engineer_resume.tex
+% Inspired by professional Lead Data Engineer & Data/AI Engineer resume layouts:
+%   - Header + contact row
+%   - Profile paragraph
+%   - Categorized Technical Skills
+%   - Experience (company, dates, title, location, bullets)
+%   - Optional "Technologies involved:" per role
+%   - Education + optional Certificates
+%
+% EDIT ONLINE: https://www.overleaf.com  → New Project → upload this file
+% COMPILE LOCALLY (from this directory):
+%   cd book/20_resume_linkedin && latexmk -pdf ai_data_engineer_resume.tex
+% =============================================================================
+
+\documentclass[10pt,letterpaper]{article}
+
+% ----- Layout & typography -----
+\usepackage[margin=0.45in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage[hidelinks]{hyperref}
+
+% Tight section spacing
+\titlespacing*{\section}{0pt}{0.6ex plus 0.2ex minus 0.1ex}{0.4ex}
+\titleformat{\section}{\scshape\large\bfseries}{}{0pt}{}[\titlerule]
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.35em}
+
+% Compact bullets (interview-ready density)
+\setlist[itemize]{noitemsep, topsep=2pt, leftmargin=1.2em, label=\textbullet}
+
+% ----- Document -----
+\begin{document}
+
+% ---------- HEADER ----------
+% TODO: Replace with your name
+{\LARGE\textbf{Your Name}}
+
+% TODO: Optional one-line headline (remove line if not needed)
+{\small\textit{AI / Data Engineer}}
+
+\vspace{0.25em}
+% TODO: Phone | Email | City — mirror sample resume header style
+{\small
+\href{tel:+10000000000}{+1 (000) 000-0000}
+\;\textbar\;
+\href{mailto:you@email.com}{you@email.com}
+\;\textbar\;
+Your City, Country
+\;\textbar\;
+\href{https://linkedin.com/in/yourprofile}{LinkedIn}
+\;\textbar\;
+\href{https://github.com/yourusername}{GitHub}
+\;\textbar\;
+\href{https://yourportfolio.dev}{Portfolio}
+}
+
+% ---------- PROFILE ----------
+\section*{Profile}
+% TODO: 3--5 lines: years of experience, domains (pipelines, lakehouse, RAG), scale, industries
+Lead AI Data Engineer with \textbf{X+ years} of experience building large-scale data pipelines, ETL/ELT, and warehouse/lakehouse solutions. Strong in \textbf{Python}, \textbf{SQL}, \textbf{Spark}, and cloud platforms; experience delivering production analytics and AI-adjacent data products for enterprise environments.
+
+% ---------- TECHNICAL SKILLS (categorized — ATS keyword friendly) ----------
+\section*{Technical Skills}
+{\small
+\begin{itemize}[leftmargin=0pt, itemindent=0pt, label={}, noitemsep, topsep=0pt]
+  % TODO: Edit categories to match your stack (style from sample Lead DE resume)
+  \item \textbf{Programming Languages:} Python, SQL, Scala (optional)
+  \item \textbf{Big Data:} Apache Spark, PySpark, Spark SQL, Hadoop, Hive, Kafka (optional)
+  \item \textbf{Cloud:} AWS (S3, Glue, EMR) / GCP (BigQuery, GCS) / Azure (Databricks, ADF) — pick yours
+  \item \textbf{Data Engineering:} dbt, Airflow, Dagster or Prefect, Delta Lake / Iceberg, Parquet
+  \item \textbf{AI / ML (optional):} RAG, vector DBs, LLM APIs, feature pipelines, model serving basics
+  \item \textbf{Other:} Git, Docker, Terraform (optional), REST APIs, data quality (Great Expectations, etc.)
+\end{itemize}
+}
+
+% ---------- EXPERIENCE ----------
+\section*{Experience}
+
+% ----- Role 1 -----
+\textbf{Company Name} \hfill Jan 20XX -- Present \\
+\textit{Lead Data Engineer} \hfill City, Country
+\begin{itemize}
+  \item % TODO: Action + scale + metric (see handbook bullet formula)
+  Led a team of \textbf{N} data engineers; owned \textbf{150+} production pipelines; improved reliability to \textbf{99.9\%} SLO.
+  \item % TODO
+  Reduced batch runtime by \textbf{40\%} via Spark partition tuning, broadcast joins, and AQE-aware shuffle configuration.
+  \item % TODO
+  Integrated multi-source data (APIs, warehouses, object storage) into a governed lakehouse with documented SLAs.
+\end{itemize}
+{\small\textit{Technologies involved:} Spark, Airflow, Snowflake or BigQuery, Python, SQL, AWS/GCP/Azure.}
+
+\vspace{0.35em}
+
+% ----- Role 2 -----
+\textbf{Company Name} \hfill Jan 20XX -- Dec 20XX \\
+\textit{Senior Data Engineer} \hfill City, Country
+\begin{itemize}
+  \item Built dynamic orchestration (e.g.\ DAG generation) and CI/CD for \textbf{200+} scheduled jobs.
+  \item Cut daily processing time by \textbf{20\%} on \textbf{2M+} records/day workloads using caching and join optimization.
+\end{itemize}
+
+\vspace{0.35em}
+
+% ----- Role 3 (optional — delete if early career) -----
+\textbf{Company Name} \hfill Month 20XX -- Month 20XX \\
+\textit{Data Engineer} \hfill City, Country
+\begin{itemize}
+  \item Migrated legacy on-prem workloads to cloud; \textbf{40\%} faster pipelines post-migration.
+  \item Tuned Spark/Hive/SQL jobs; supported production incidents and data quality for \textbf{10+ TB} datasets.
+\end{itemize}
+
+% ---------- EDUCATION ----------
+\section*{Education}
+\textbf{Your University or Bootcamp} \hfill City, Country \\
+\textit{M.S.\ or B.S.\ Computer Science} (or related) \hfill Graduation Year \\
+{\small Relevant: distributed systems, databases, machine learning (optional).}
+
+\vspace{0.35em}
+\textbf{Another Degree (optional)} \hfill City, Country \\
+\textit{B.E.\ / B.Tech.\ Computer Engineering} \hfill Year -- Year
+
+% ---------- CERTIFICATES (optional — from Data/AI sample) ----------
+\section*{Certificates}
+{\small
+\begin{itemize}[leftmargin=1.2em]
+  \item % TODO: e.g.\ Cloud or GenAI cert — Issuer, Year
+  Introduction to Generative AI (Example) --- Issuer, 20XX
+  \item AZ-900 or equivalent --- Microsoft, 20XX
+\end{itemize}
+}
+
+% Tip: keep to one page for <10 YOE — trim roles or skills if PDF spills to page 2
+
+\end{document}

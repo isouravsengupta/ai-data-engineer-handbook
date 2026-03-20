@@ -8,8 +8,44 @@ This chapter covers **resume writing** and **LinkedIn optimization** for AI Data
 
 ## Study Plan (1–2 weeks)
 
-* Week 1: Resume structure, bullets
-* Week 2: LinkedIn profile, content
+* Week 1: **Set up LaTeX resume** (Overleaf or local), structure, bullets
+* Week 2: LinkedIn profile, content, export PDF workflow
+
+---
+
+## 0 — Build Your Resume in LaTeX (Strong Recommendation)
+
+**Everyone in this Gita should maintain their resume as LaTeX source**, not only as Word/Google Docs.
+
+### Why LaTeX for resumes
+
+| Benefit | Why it matters |
+| ------- | -------------- |
+| **Version control** | Plain `.tex` files diff cleanly in Git — track every change, branch variants (e.g. “ML-heavy” vs “data-platform” resume) |
+| **Consistent layout** | No accidental spacing/font drift when you edit one bullet |
+| **Professional typography** | Clean, readable PDFs that look sharp on screen and in print |
+| **Single source of truth** | One file generates a polished PDF; no “which doc is latest?” |
+| **Engineering signal** | For technical roles, a LaTeX resume subtly signals you care about precision and tooling |
+
+### ATS (Applicant Tracking Systems)
+
+* Export **PDF from LaTeX** — use a **simple, text-based** template (no complex multi-column tricks, no embedding text as images).
+* Avoid fancy graphics, icons-as-images, and scanned PDFs.
+* See **01_resume_templates.md** for LaTeX stacks and ATS-safe patterns.
+
+### How to get started (pick one)
+
+1. **Overleaf** — browser editor, templates, collaboration — fastest for beginners
+2. **Local** — TeX Live (Linux/Windows) or MacTeX (macOS) + VS Code + LaTeX Workshop extension
+
+**Rule for this handbook**: Treat your resume like code — **LaTeX in Git**, **PDF as build artifact**.
+
+```mermaid
+flowchart LR
+    A["resume.tex"] --> B["pdflatex / latexmk"]
+    B --> C["resume.pdf"]
+    A --> D["Git commit"]
+```
 
 ---
 
@@ -18,13 +54,14 @@ This chapter covers **resume writing** and **LinkedIn optimization** for AI Data
 * **One page** for < 10 years experience
 * **Quantify** impact (%, scale, latency)
 * **Keywords** from job descriptions
-* **ATS-friendly**: Simple format, no graphics
+* **ATS-friendly**: Simple LaTeX template, text-selectable PDF, standard section titles
 
 ```mermaid
 flowchart TD
-    A[Experience] --> B[Quantify]
+    A[LaTeX source] --> B[Quantify]
     B --> C[Keywords]
-    C --> D[ATS Pass]
+    C --> D[Clean PDF]
+    D --> E[ATS pass]
 ```
 
 ---
@@ -61,12 +98,19 @@ flowchart TD
 
 ## Key Takeaways
 
-* Quantify impact
-* ATS-friendly format
+* **Use LaTeX** for your resume — version control, consistency, professional output
+* Quantify impact; keep PDF **simple** for ATS
 * LinkedIn = extended resume + network
+
+---
+
+## Download-ready `.tex` template
+
+* **`book/20_resume_linkedin/ai_data_engineer_resume.tex`** — structure aligned with strong industry resumes (profile, categorized skills, experience, education, certificates).
+* **`RESUME_LATEX_README.md`** — how to use **[Overleaf](https://www.overleaf.com)** or compile locally.
 
 ---
 
 ## Next Chapter
 
-Proceed to: **01_resume_templates.md**
+Proceed to: **01_resume_templates.md** (LaTeX templates, starter `.tex`, tools)
