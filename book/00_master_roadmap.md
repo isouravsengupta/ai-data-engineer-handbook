@@ -141,6 +141,7 @@ Topics:
 
 Important tools:
 
+- Apache Hadoop (HDFS, MapReduce, YARN)
 - Apache Spark
 - Apache Kafka
 - Apache Flink

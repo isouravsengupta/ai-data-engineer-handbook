@@ -114,7 +114,7 @@ result_cpu = result.cpu()  # Device → Host
 ```mermaid
 flowchart TD
     A[N elements] --> B[blockDim = 256]
-    B --> C[gridDim = ceil(N/256)]
+    B --> C["gridDim = ceil(N/256)"]
     C --> D[Launch kernel]
 ```
 

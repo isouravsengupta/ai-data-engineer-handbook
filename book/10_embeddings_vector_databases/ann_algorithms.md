@@ -27,7 +27,7 @@ flowchart LR
     Q --> V2[Compare v2]
     Q --> V3[...]
     Q --> Vn[Compare vn]
-    V1 --> R[O(n·d)]
+    V1 --> R["O(n*d)"]
 ```
 
 ---
