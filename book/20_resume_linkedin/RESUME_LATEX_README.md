@@ -1,6 +1,6 @@
 # LaTeX resume template (AI Data Engineer)
 
-The file **`ai_data_engineer_resume.tex`** lives in this folder (`book/20_resume_linkedin/`) — not in a subfolder — so you can download or copy it directly.
+The file **`ai_data_engineer_resume.tex`** lives in this folder (`book/20_resume_linkedin/`) — so you can download or copy it directly.
 
 ## File
 
