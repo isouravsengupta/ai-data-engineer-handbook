@@ -1,0 +1,10 @@
+flowchart TB
+    A[Raw Data Sources] --> B[Bronze Layer]
+    B --> C[Silver Layer]
+    C --> D[Gold Layer]
+    D --> E[BI and Reporting]
+    D --> F[Feature Store Offline]
+    F --> G[Feature Store Online]
+    G --> H[Model Inference]
+    C --> I[Data Quality Validation]
+    I --> J[Alerting]

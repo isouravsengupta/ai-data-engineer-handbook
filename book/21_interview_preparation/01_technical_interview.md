@@ -39,6 +39,42 @@ Guide to **technical interviews** — algorithms, SQL, ML. What to expect and ho
 
 ---
 
+## 5 — Technical Interview Drill Matrix
+
+### Coding
+
+- 3x/week: medium timed rounds (25-30 min each)
+- 2x/week: hard problem rounds (40-45 min each)
+- daily: one verbal complexity explanation
+
+### SQL
+
+- window functions, joins, CTEs, optimization
+- 4 SQL drills/week with explanation-first approach
+
+### Data/AI Design
+
+- 2 whiteboard sessions/week
+- template: requirements -> components -> bottlenecks -> trade-offs
+
+### Review Loop
+
+- maintain mistake log by category:
+  - pattern recognition
+  - edge cases
+  - communication gaps
+  - complexity mistakes
+
+---
+
+## 6 — Answering Framework (Use in Every Round)
+
+1. Clarify requirements and constraints
+2. Propose baseline approach
+3. Derive optimized approach
+4. Explain complexity and trade-offs
+5. Validate with tests and edge cases
+
 ## Key Takeaways
 
 * Clarify before coding

@@ -1,0 +1,14 @@
+flowchart LR
+    A[Data Sources] --> B[Ingestion]
+    B --> C[Cleaning and Parsing]
+    C --> D[Chunking]
+    D --> E[Embeddings]
+    E --> F[Vector Index]
+    G[User Query] --> H[Query Embedding]
+    H --> I[Retriever Top-K]
+    F --> I
+    I --> J[Reranker Optional]
+    J --> K[Context Builder]
+    K --> L[LLM Generation]
+    L --> M[Answer]
+    M --> N[Feedback and Evaluation]

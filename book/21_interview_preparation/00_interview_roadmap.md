@@ -15,6 +15,32 @@ This chapter covers **interview preparation** for AI Data Engineer roles. Techni
 
 ---
 
+## 8-Week Execution Plan (Suggested)
+
+### Week 1-2: Coding Foundations
+
+- Daily: 2 coding problems (mostly medium)
+- Focus: arrays, hash maps, two pointers, sliding window
+- SQL: 3 window-function drills per week
+
+### Week 3-4: Data and AI System Design
+
+- 2 system design sessions/week
+- 2 architecture write-ups/week
+- Topics: data pipelines, RAG systems, inference serving
+
+### Week 5-6: ML/LLM Depth
+
+- revise embeddings, retrieval, model serving, evaluation
+- answer 1 "trade-off question" daily
+- run 2 end-to-end mock design rounds/week
+
+### Week 7-8: Interview Simulation
+
+- 3 mock coding rounds/week
+- 2 mock system design rounds/week
+- daily behavioral STAR rehearsal (15 min)
+
 ## 1 — Interview Types
 
 ```mermaid
@@ -63,6 +89,14 @@ flowchart TD
 * 2–3 LeetCode per day (medium focus)
 * 1 system design per week
 * Mock interviews with peers
+
+### Daily Session (120-150 Minutes)
+
+- 60 min coding
+- 25 min SQL/design prompt
+- 20 min ML/LLM concept recap
+- 15 min behavioral STAR practice
+- 10 min mistakes log and revision plan
 
 ---
 

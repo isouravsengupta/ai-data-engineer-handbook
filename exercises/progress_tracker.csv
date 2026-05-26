@@ -1,0 +1,4 @@
+Date,Planned_Minutes,Actual_Minutes,Python_Topic,DSA_Problems_Solved,Hard_Problems_Solved,Core_DE_SQL_Topic,Implementation_Task,Primary_Mistake,Fix_For_Mistake,Confidence_1_to_10,Status
+2026-05-20,150,0,"Lists, Slicing, Methods",0,0,"BQ Star vs Snowflake Modeling","Comparison note + schema sketch",, ,0,Not Started
+2026-05-21,150,0,"Dicts, get/pop",0,0,"SQL Rank vs Dense_Rank","Word frequency mapping",, ,0,Not Started
+2026-05-22,150,0,"Sets, Intersections",0,0,"SQL Lead/Lag","Set vs list speed testing",, ,0,Not Started

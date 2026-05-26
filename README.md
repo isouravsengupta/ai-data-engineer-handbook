@@ -47,6 +47,19 @@ The book is organized in `book/` as follows:
 3. **Reinforce with exercises** — Use **`exercises/`** (Python, algorithms, SQL, data engineering, ML) to practice.
 4. **Build portfolio pieces** — Use **`projects/`** for end-to-end projects (vector search engine, RAG pipeline, distributed data pipeline, Spark query engine, LLM inference server).
 
+### Start Here (Beginner Path)
+
+If you are starting from zero, follow this sequence:
+
+1. `docs/ZERO_TO_HERO_BLUEPRINT.md`
+2. `book/00_master_roadmap.md`
+3. `exercises/MASTER_PYTHON_AGENT.md`
+4. `projects/README.md`
+5. `career/README.md`
+6. `research/README.md`
+7. `docs/CHAPTER_EXERCISE_MAPPING.md`
+8. `docs/PHASE_PUBLISH_READINESS_CHECKLIST.md`
+
 ---
 
 ## Learning Roadmap

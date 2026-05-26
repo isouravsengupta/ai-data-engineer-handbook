@@ -1,0 +1,13 @@
+flowchart LR
+    A[Event Source] --> B{Ingestion Mode}
+    B -->|Batch| C[Object Storage Raw Zone]
+    C --> D[Scheduled Transform Job]
+    D --> E[Warehouse/Lakehouse Tables]
+    B -->|Streaming| F[Message Broker]
+    F --> G[Stream Processor]
+    G --> H[Serving Table]
+    E --> I[BI Dashboard]
+    H --> I
+    G --> J[Dead Letter Queue]
+    D --> K[Data Quality Checks]
+    G --> K

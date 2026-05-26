@@ -1,0 +1,10 @@
+flowchart LR
+    A[Client Request] --> B[API Gateway]
+    B --> C[Auth and Rate Limit]
+    C --> D[Inference Router]
+    D --> E[Batching Queue]
+    E --> F[Model Server]
+    F --> G[Post Processing]
+    G --> H[Response]
+    F --> I[Telemetry: Metrics/Logs/Traces]
+    D --> J[Fallback Model]
