@@ -96,6 +96,13 @@ The **AI Data Engineer Gita** roadmap in `book/00_master_roadmap.md` outlines 27
 
 ---
 
+## AI Engineering To Do
+
+- Task tracker file in repo: `ai_engineering_to_do.md`
+- Google Sheet: [AI Engineering To Do](https://docs.google.com/spreadsheets/d/1w4ipS7mptsGN6Y1sTcdnqRQzSB1Jhx9FmN46bLpHeC8/edit?gid=103552055#gid=103552055)
+
+---
+
 ## Contributing
 
 See **[CONTRIBUTING.md](CONTRIBUTING.md)** for how to contribute (typos, new chapters, exercises, projects, research notes).
