@@ -84,15 +84,15 @@ The **AI Data Engineer Gita** roadmap in `book/00_master_roadmap.md` outlines 27
 | [distributed_data_pipeline](projects/distributed_data_pipeline/) | Distributed data pipeline (e.g. Spark, Kafka, Flink) |
 | [spark_query_engine](projects/spark_query_engine/) | Spark SQL over lakehouse storage |
 | [llm_inference_server](projects/llm_inference_server/) | LLM serving with batching, streaming, observability (e.g. vLLM, Ray Serve) |
-| [ai-engineering-tracker](projects/ai-engineering-tracker/) | Interactive AI Engineering study tracker web app (single-file HTML app) |
+| [ai-engineering-tracker](ai_engineering_tracker.html) | Interactive AI Engineering study tracker web app (single-file HTML app) |
 
 ---
 
 ## AI Engineering Tracker App
 
-- Source file in repo: `projects/ai-engineering-tracker/index.html`
-- Launch rendered app from GitHub: [Open App](https://htmlpreview.github.io/?https://raw.githubusercontent.com/isouravsengupta/ai-data-engineer-handbook/main/projects/ai-engineering-tracker/index.html)
-- Run locally: open `projects/ai-engineering-tracker/index.html` in any browser
+- Source file in repo: `ai_engineering_tracker.html`
+- Launch rendered app from GitHub: [Open App](https://htmlpreview.github.io/?https://raw.githubusercontent.com/isouravsengupta/ai-data-engineer-handbook/main/ai_engineering_tracker.html)
+- Run locally: open `ai_engineering_tracker.html` in any browser
 
 ---
 
