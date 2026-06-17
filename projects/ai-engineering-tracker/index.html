@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Engineering & Systems Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+        /* Custom premium scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #38bdf8;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-900 border-b border-slate-800 p-4 sticky top-0 z-30 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+            <div>
+                <div class="flex items-center gap-3">
+                    <span class="flex items-center justify-center w-10 h-10 rounded-lg bg-sky-500/10 text-sky-400 font-bold border border-sky-500/20 shadow-inner">⚡</span>
+                    <div>
+                        <h1 class="text-xl md:text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-sky-400 via-indigo-400 to-teal-400 tracking-tight">
+                            AI Engineering & Systems Tracker
+                        </h1>
+                        <p class="text-xs text-slate-400 mt-0.5">
+                            Google DeepMind & Stanford Systems Inspired Syllabus. Configured for 22h/week (2h Weekdays + 6h Weekends).
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-2 w-full lg:w-auto">
+                <button onclick="switchTab('tracker')" id="btn-tab-tracker" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-sm font-semibold transition-all shadow-md">
+                    Roadmap Tracker
+                </button>
+                <button onclick="switchTab('research')" id="btn-tab-research" class="px-4 py-2 bg-slate-800 hover:bg-slate-755 text-slate-300 rounded-lg text-sm font-semibold transition-all">
+                    Daily Research Hub 📚
+                </button>
+                <button onclick="exportToCSV()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-sm font-semibold shadow-lg shadow-emerald-950/20 flex items-center justify-center gap-2 transition-all active:scale-95">
+                    Export CSV
+                </button>
+                <button onclick="openResetModal()" class="px-4 py-2 bg-rose-950/60 hover:bg-rose-900/80 border border-rose-800/50 text-rose-200 rounded-lg text-sm font-semibold transition-all">
+                    Reset
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Reset Confirmation Modal -->
+    <div id="resetModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/90 hidden px-4 transition-all">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-md w-full p-6 shadow-2xl">
+            <div class="flex items-center gap-3 text-rose-400 mb-3">
+                <svg class="w-6 h-6 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <h3 class="text-lg font-bold text-slate-100">Reset Tracker Progress?</h3>
+            </div>
+            <p class="text-sm text-slate-300 mb-6 leading-relaxed">
+                This will clear all checkboxes, micro-logs, and status entries permanently from your local storage.
+            </p>
+            <div class="flex justify-end gap-3">
+                <button onclick="closeResetModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-sm font-semibold transition">
+                    Cancel
+                </button>
+                <button onclick="confirmResetProgress()" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded-lg text-sm font-semibold transition shadow-md shadow-rose-950/40">
+                    Yes, Reset Everything
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Analytics Panel -->
+    <section class="max-w-7xl mx-auto w-full p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
+        <div class="bg-slate-900/60 border border-slate-800/80 p-4 rounded-xl flex items-center justify-between shadow-md">
+            <div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Overall Completion</p>
+                <p class="text-3xl font-black text-sky-400 mt-1" id="overallProgressPercent">0%</p>
+            </div>
+            <div class="w-14 h-14 rounded-full border-4 border-slate-800 flex items-center justify-center relative overflow-hidden bg-slate-950">
+                <div class="absolute bottom-0 inset-x-0 bg-sky-500/20" id="progressCircleFill" style="height: 0%;"></div>
+                <span class="text-[10px] font-extrabold text-sky-400 z-10" id="progressRatio">0/365</span>
+            </div>
+        </div>
+
+        <div class="bg-slate-900/60 border border-slate-800/80 p-4 rounded-xl flex items-center justify-between shadow-md">
+            <div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Current Focus Phase</p>
+                <p class="text-xs font-bold text-indigo-400 mt-2 truncate max-w-[200px]" id="currentPhaseLabel">Evaluating...</p>
+            </div>
+            <span class="text-2xl opacity-80">🏆</span>
+        </div>
+
+        <div class="bg-slate-900/60 border border-slate-800/80 p-4 rounded-xl flex items-center justify-between shadow-md">
+            <div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Study Hours Logged</p>
+                <p class="text-3xl font-black text-teal-400 mt-1" id="hoursDone">0 / 365h</p>
+            </div>
+            <span class="text-2xl opacity-80">⏱️</span>
+        </div>
+
+        <div class="bg-slate-900/60 border border-slate-800/80 p-4 rounded-xl flex items-center justify-between shadow-md">
+            <div>
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Active Continuous Streak</p>
+                <p class="text-3xl font-black text-amber-500 mt-1" id="streakLabel">0 Days</p>
+            </div>
+            <span class="text-2xl opacity-80">🔥</span>
+        </div>
+    </section>
+
+    <!-- Tab Section: Roadmap Tracker -->
+    <div id="tab-tracker-content" class="flex-1 flex flex-col">
+        
+        <!-- Interactive Single-Select Tag Filters -->
+        <section class="max-w-7xl mx-auto w-full px-4 mb-2">
+            <div class="bg-slate-900 border border-slate-800/80 rounded-xl p-3 shadow-md">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">⚡ Filter by Major Topic Focus (Strict Single Tag Select):</p>
+                <div class="flex flex-wrap gap-1.5" id="topicBadgeContainer">
+                    <!-- Javascript populates row tag triggers -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters & Search Controls -->
+        <section class="max-w-7xl mx-auto w-full px-4 py-2 flex flex-col md:flex-row gap-2 justify-between items-center">
+            <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                <select id="phaseFilter" onchange="filterRoadmap()" class="bg-slate-900 border border-slate-800 text-xs md:text-sm text-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                    <option value="All">All Quarters & Phases</option>
+                    <option value="0">Month 0: Python & ML Foundations (Days 1-30)</option>
+                    <option value="1">Quarter 1: Deep Learning Math & Core PyTorch (Days 31-91)</option>
+                    <option value="2">Quarter 2: Transformers, Lifecycle & Tuning (Days 92-182)</option>
+                    <option value="3">Quarter 3: GPU Hardware, Triton & MLOps (Days 183-273)</option>
+                    <option value="4">Quarter 4: Distributed Parallelism, Applied AI & Agents (Days 274-365)</option>
+                </select>
+
+                <select id="statusFilter" onchange="filterRoadmap()" class="bg-slate-900 border border-slate-800 text-xs md:text-sm text-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                    <option value="All">All Statuses</option>
+                    <option value="Not Started">Not Started</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                </select>
+
+                <button onclick="clearAllFilters()" class="text-xs text-sky-400 bg-sky-950/40 hover:bg-sky-900/60 border border-sky-900 px-3 py-2 rounded-lg transition-all">
+                    Reset Active Filters
+                </button>
+            </div>
+
+            <div class="relative w-full md:w-80">
+                <input type="text" id="searchInput" onkeyup="filterRoadmap()" placeholder="Search variables, continuous batching, HNSW, Triton fusions..." class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 pl-9 text-xs md:text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                <svg class="w-4 h-4 absolute left-3 top-3 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+        </section>
+
+        <!-- Main Spreadsheet Grid Table Area -->
+        <main class="flex-1 max-w-7xl mx-auto w-full p-4 overflow-hidden flex flex-col">
+            <div class="flex-1 bg-slate-900 border border-slate-800/80 rounded-xl overflow-auto shadow-2xl relative">
+                <table class="w-full text-left border-collapse text-xs md:text-sm">
+                    <thead class="bg-slate-950 border-b border-slate-800 sticky top-0 z-10 text-slate-400 font-bold uppercase tracking-wider">
+                        <tr>
+                            <th class="p-3 w-16 text-center border-r border-slate-800">Day</th>
+                            <th class="p-3 w-44 border-r border-slate-800">Syllabus Phase</th>
+                            <th class="p-3 w-56 border-r border-slate-800">Specific Topic</th>
+                            <th class="p-3 w-80 border-r border-slate-800">Daily Core Concepts & Math Reading</th>
+                            <th class="p-3 w-[450px] border-r border-slate-800">Hands-on Engineering Challenge (40 Min)</th>
+                            <th class="p-3 w-32 text-center border-r border-slate-800">Status</th>
+                            <th class="p-3 w-64">Notes & Micro-Logs</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sheetBody" class="divide-y divide-slate-800/50">
+                        <!-- Javascript populates row entities -->
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <!-- Tab Section: Daily Research Hub -->
+    <div id="tab-research-content" class="max-w-7xl mx-auto w-full p-6 hidden flex-col gap-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl">
+            <h2 class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-indigo-400">
+                🚀 Google DeepMind Daily Paper Skimming Protocol
+            </h2>
+            <p class="text-slate-350 text-sm mt-2 leading-relaxed font-normal">
+                As a DeepMind Research Engineer, staying ahead of rapid advancements is your greatest advantage. Do not fall into tutorial hell. Instead, dedicate **30 minutes every single morning** to building your personal reference graph. 
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                <div class="bg-slate-950 border border-slate-800/80 p-4 rounded-lg">
+                    <h3 class="font-bold text-sky-400 text-sm flex items-center gap-2">
+                        <span>1. The Abstract Pass (10m)</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                        Read the Title & Abstract. Classify the paper immediately: Is it a <strong>Dataset paper</strong>, an <strong>Incremental tweak</strong>, or a <strong>Foundational shift</strong>?
+                    </p>
+                </div>
+                <div class="bg-slate-950 border border-slate-800/80 p-4 rounded-lg">
+                    <h3 class="font-bold text-indigo-400 text-sm flex items-center gap-2">
+                        <span>2. The Visual Setup Pass (10m)</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                        Study the main architecture diagrams and the experimental results tables. Focus on the scaling limits and system parameters.
+                    </p>
+                </div>
+                <div class="bg-slate-950 border border-slate-800/80 p-4 rounded-lg">
+                    <h3 class="font-bold text-teal-400 text-sm flex items-center gap-2">
+                        <span>3. Trace & Classify (10m)</span>
+                    </h3>
+                    <p class="text-xs text-slate-400 mt-2 leading-relaxed">
+                        Read the conclusion and check the Related Work section. Add the paper as a node in your mental system engineering graph.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Premium Research Channels Layout with Dynamic Tab Filters -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Dynamic Channel Directory -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl flex flex-col">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-3 mb-4">
+                    <h3 class="text-md font-bold text-slate-200">🌐 Premium Daily Channels</h3>
+                    
+                    <!-- Dynamic Channel Category Select -->
+                    <select id="channelCategorySelect" onchange="renderDynamicChannels(this.value)" class="bg-slate-950 border border-slate-800 text-xs text-slate-350 rounded px-2.5 py-1.5 focus:outline-none focus:ring-1 focus:ring-sky-500 cursor-pointer">
+                        <option value="all">All Sources (24 Channels)</option>
+                        <option value="preprints">Preprints & Open-Access</option>
+                        <option value="search">AI Search & Discovery</option>
+                        <option value="labs">Industry & Labs</option>
+                        <option value="conferences">Top Conferences</option>
+                        <option value="tools">Reading & Data Tools</option>
+                    </select>
+                </div>
+                
+                <!-- Scrollable Dynamic Channel Container -->
+                <div class="space-y-3 max-h-[500px] overflow-y-auto pr-2" id="dynamicChannelsContainer">
+                    <!-- Javascript populates dynamic channel cards -->
+                </div>
+            </div>
+
+            <!-- Paper Reading Tracker / Habit Builder -->
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl flex flex-col">
+                <h3 class="text-md font-bold text-slate-200 mb-4 border-b border-slate-800 pb-2">🎯 50-Paper Mastery Tracker</h3>
+                <p class="text-xs text-slate-400 leading-relaxed mb-4">
+                    Andrew Ng's rule of thumb: If you read and truly understand <strong>50 high-signal papers</strong> in a sub-domain, you will develop a deep industry-level intuition. Keep track of your research notes below:
+                </p>
+                <div class="flex-1 flex flex-col gap-3">
+                    <input type="text" id="paperTitleInput" placeholder="Paper Title (e.g., DeepSeek-V3 Technical Report)" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-sky-500">
+                    <textarea id="paperNotesInput" placeholder="Key Systems Takeaway (e.g., Compression of KV cache via latent dimensions saves up to 4x memory bandwidth...)" class="w-full flex-1 bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-sky-500 h-24 resize-none"></textarea>
+                    <button onclick="addPaperLog()" class="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold transition-all">
+                        Log Paper to My Library
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Saved Papers List -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-xl flex flex-col">
+            <h3 class="text-md font-bold text-slate-200 mb-4 border-b border-slate-800 pb-2">📚 My Research Library</h3>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-xs">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-slate-500 font-bold uppercase tracking-wider">
+                            <th class="p-3 w-1/3">Paper Title</th>
+                            <th class="p-3 w-1/2">Systems & Architecture Insight</th>
+                            <th class="p-3 w-1/6 text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="paperLogsTable" class="divide-y divide-slate-800/40">
+                        <!-- Dynamic items loaded -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables securely instantiated first to guarantee ReferenceError protection
+        const PHASES = {
+            0: "Month 0: Python & ML Foundations",
+            1: "Q1: Deep Learning Math & Core PyTorch",
+            2: "Q2: Transformers, Lifecycle & Tuning",
+            3: "Q3: GPU Hardware, Triton & MLOps",
+            4: "Q4: Distributed Parallelism, Applied AI & Agents"
+        };
+
+        const TOPIC_TAGS = [
+            "Python", "DSA", "Math", "ML (Classical)", "DL (Deep Learning)",
+            "System Design", "Transformers", "LLM Lifecycle", "Inference & Serving",
+            "GPU Physics & Triton", "Distributed Systems", "Applied AI & RAG",
+            "AI Agents", "MLOps & Deployment", "Case Studies", "Data Engineering"
+        ];
+
+        // Procedural syllabus database configurations
+        const DYNAMIC_CURRICULUM_BLUEPRINT = [
+            { q: 0, title: PHASES[0], start: 1, end: 30 },
+            { q: 1, title: PHASES[1], start: 31, end: 91 },
+            { q: 2, title: PHASES[2], start: 92, end: 182 },
+            { q: 3, title: PHASES[3], start: 183, end: 273 },
+            { q: 4, title: PHASES[4], start: 274, end: 365 }
+        ];
+
+        // 30 premium research channels cataloged completely
+        const INTEL_RESEARCH_CHANNELS = [
+            // Preprints & Open Access
+            { name: "arXiv CS.LG (Machine Learning)", category: "preprints", url: "https://arxiv.org/list/cs.LG/recent", desc: "The definitive open preprint server for cutting-edge ML and hardware alignment papers." },
+            { name: "arXiv cs.AI (Artificial Intelligence)", category: "preprints", url: "https://arxiv.org/list/cs.AI/recent", desc: "arXiv section highlighting theoretical breakthroughs, planning architectures, and neural foundations." },
+            { name: "Arxiv Sanity Lite", category: "preprints", url: "http://arxiv-sanity-lite.com/", desc: "Andrej Karpathy's refined interface to query, prioritize, and isolate high-signal trending papers on arXiv." },
+            { name: "JMLR (Journal of Machine Learning)", category: "preprints", url: "https://www.jmlr.org/", desc: "The premier entirely free, open-access, peer-reviewed academic journal for ML foundations." },
+            { name: "JAIR (Journal of AI Research)", category: "preprints", url: "https://jair.org/", desc: "A prestigious, open-access journal publishing comprehensive research across all AI domains." },
+            { name: "SSRN (Social Science Network)", category: "preprints", url: "https://www.ssrn.com/", desc: "Excellent preprint archive for cross-domain AI research, policy alignment, and societal impact." },
+            { name: "OpenReview ML Portals", category: "preprints", url: "https://openreview.net/", desc: "Open-source peer review archive hosting top conferences. Uncensored reviewer and author debate logs." },
+            
+            // AI Search & Discovery
+            { name: "Google Scholar", category: "search", url: "https://scholar.google.com/", desc: "The gold standard index for academic literature. Perfect for setting up custom keyword and author alerts." },
+            { name: "Semantic Scholar", category: "search", url: "https://www.semanticscholar.org/", desc: "AI-powered academic search offering smart TL;DR summaries and detailed citation-influence graphs." },
+            { name: "Consensus", category: "search", url: "https://consensus.app/", desc: "AI search assistant summarizing evidence-backed claims and consensus scores across peer-reviewed papers." },
+            { name: "SciSpace", category: "search", url: "https://typeset.io/", desc: "A semantic tool using AI to explain complex equations, charts, and dense paragraphs directly from PDFs." },
+            { name: "Elicit", category: "search", url: "https://elicit.com/", desc: "An AI-powered literature review assistant that automates data extraction and summarizes paper cohorts." },
+            { name: "ResearchRabbit", category: "search", url: "https://www.researchrabbit.ai/", desc: "Sleek citation-mapping visualizer that maps and alerts you on evolutionary connection trends." },
+            { name: "Connected Papers", category: "search", url: "https://www.connectedpapers.com/", desc: "Generates custom interactive similarity graphs of academic citations based on a single seed paper." },
+            { name: "Scite.ai", category: "search", url: "https://scite.ai/", desc: "AI citation analyzer that flags whether subsequent works support, contrast, or mention a paper's claim." },
+
+            // Industry & Labs
+            { name: "Google DeepMind Publications", category: "labs", url: "https://deepmind.google/research/publications/", desc: "Pioneering works in model architectures (Gemini), reinforcement learning, science, and physical AI." },
+            { name: "OpenAI Research Blog", category: "labs", url: "https://openai.com/research", desc: "Breakthrough publications on generative AI, RLHF alignment scaling, and developer infrastructure." },
+            { name: "Google AI Blog", category: "labs", url: "https://research.google/blog/", desc: "Applied AI discoveries, foundation model training paradigms, and ethical model development updates." },
+            { name: "Meta AI Research", category: "labs", url: "https://ai.meta.com/research/", desc: "Open-source foundation research (Llama), vision, audio translation models, and 3D generation." },
+            { name: "NVIDIA Technical Blog", category: "labs", url: "https://developer.nvidia.com/blog/category/deep-learning-ai/", desc: "Low-level system architecture optimization, custom CUDA developments, and GPU cluster scaling." },
+            { name: "MIT CSAIL Publications", category: "labs", url: "https://www.csail.mit.edu/research", desc: "Leading computer science & artificial intelligence archive tracking hardware-software systems design." },
+
+            // Top Conferences
+            { name: "NeurIPS Proceedings", category: "conferences", url: "https://neurips.cc/", desc: "Top-tier conference covering neural network theories, optimization metrics, and computational neuroscience." },
+            { name: "ICML (Machine Learning)", category: "conferences", url: "https://icml.cc/", desc: "Core venue for state-of-the-art developments in machine learning algorithms and cluster computing." },
+            { name: "ICLR (Representations)", category: "conferences", url: "https://iclr.cc/", desc: "The definitive global venue for representation learning, transformers, and deep architectures." },
+            { name: "CVPR (Computer Vision)", category: "conferences", url: "https://cvpr.thecvf.com/", desc: "Pioneering research papers in spatial intelligence, object detection, and multi-modal vision." },
+            { name: "ACL Anthology (NLP)", category: "conferences", url: "https://aclanthology.org/", desc: "Comprehensive repository of NLP, tokenization, sequence translation, and computational linguistics." },
+            { name: "Papers With Code", category: "conferences", url: "https://paperswithcode.com/", desc: "Curated dataset connecting academic papers directly with open-source implementations and evaluation benchmarks." },
+
+            // Reading & Data Tools
+            { name: "arXiv Vanity", category: "tools", url: "https://www.arxivvanity.com/", desc: "Renders standard double-column academic PDFs into clean, responsive HTML web pages on your browser." },
+            { name: "Google NotebookLM", category: "tools", url: "https://notebooklm.google/", desc: "Personal workspace that parses multiple imported PDFs to answer prompts backed strictly by source citations." },
+            { name: "Academic Torrents", category: "tools", url: "https://academictorrents.com/", desc: "Distributed BitTorrent index designed for researchers to quickly sync and share petabyte-scale AI datasets." }
+        ];
+
+        // 60+ fully detailed, progressive DSA challenges (strictly unique)
+        const DSA_CHALLENGES_DB = [
+            { title: "Two Sum (Arrays)", diff: "Easy", desc: "Scan a sequence using hash lookup indexes in O(N) to discover elements matching target sum." },
+            { title: "Valid Anagram (Hashing)", diff: "Easy", desc: "Count token occurrences across S and T strings, validating permutation properties." },
+            { title: "Contains Duplicate (Arrays)", diff: "Easy", desc: "Isolate recurring pointers inside memory buffers using unique lookup sets." },
+            { title: "Group Anagrams (Hashing)", diff: "Medium", desc: "Map sorted word keys to dynamic lists grouping all matching anagram matrices." },
+            { title: "Top K Frequent Elements (Heaps)", diff: "Medium", desc: "Count token occurrences, isolating the top K entries utilizing min-heaps." },
+            { title: "Product of Array Except Self", diff: "Medium", desc: "Compute running prefix and suffix multiplication products in O(N) without dividing." },
+            { title: "Longest Consecutive Sequence", diff: "Medium", desc: "Construct target search spaces in hash sets to discover sequential run spans in linear time." },
+            { title: "Valid Palindrome (Two Pointers)", diff: "Easy", desc: "Evaluate index offsets inward from opposite ends to verify symmetrical elements." },
+            { title: "Two Sum II (Two Pointers)", diff: "Medium", desc: "Scan sorted arrays using left-right pointers to find target sums in O(N)." },
+            { title: "3Sum (Two Pointers)", diff: "Medium", desc: "Locate unique index triplets summing to zero while avoiding duplicates." },
+            { title: "Container With Most Water", diff: "Medium", desc: "Maximize water volumes by sliding left-right height indexes." },
+            { title: "Trapping Rain Water (Two Pointers)", diff: "Hard", desc: "Isolate running left-right maximum bounds to calculate fluid accumulation." },
+            { title: "Best Time to Buy/Sell Stock", diff: "Easy", desc: "Isolate maximum profits using dynamic minimum price sliders." },
+            { title: "Longest Substring Without Repeating", diff: "Medium", desc: "Track unique character frequencies to isolate the longest non-repeating sequence." },
+            { title: "Longest Repeating Character Replacement", diff: "Medium", desc: "Slide character window limits allowing up to K transformations." },
+            { title: "Permutation in String", diff: "Medium", desc: "Align character frequency maps across a sliding window of constant size." },
+            { title: "Minimum Window Substring", diff: "Hard", desc: "Isolate the minimum sliding window containing all target characters." },
+            { title: "Valid Parentheses (Stacks)", diff: "Easy", desc: "Assert bracket pairings match using push-pop operations." },
+            { title: "Min Stack (Stacks)", diff: "Medium", desc: "Design a custom stack class retrieving minimum values in O(1)." },
+            { title: "Evaluate Reverse Polish Notation", diff: "Medium", desc: "Calculate postfix operation stacks sequentially." },
+            { title: "Generate Parentheses (Stacks)", diff: "Medium", desc: "Recursively build N pairs of correctly nested parenthesis loops." },
+            { title: "Daily Temperatures (Stacks)", diff: "Medium", desc: "Map temperature records to monotonic index stacks." },
+            { title: "Largest Rectangle in Histogram", diff: "Hard", desc: "Calculate maximum rectangular limits using monotonic height index stacks." },
+            { title: "Binary Search (Basic)", diff: "Easy", desc: "Find target index inside sorted arrays in logarithmic time." },
+            { title: "Search a 2D Matrix", diff: "Medium", desc: "Navigate structured coordinate coordinates using division offsets." },
+            { title: "Koko Eating Bananas", diff: "Medium", desc: "Determine min eating rates using binary search on constraints." },
+            { title: "Find Minimum in Rotated Sorted Array", diff: "Medium", desc: "Locate pivoted minimal indices." },
+            { title: "Search in Rotated Sorted Array", diff: "Medium", desc: "Determine indices inside rotated bounds in O(log N)." },
+            { title: "Median of Two Sorted Arrays", diff: "Hard", desc: "Search partition splits to isolate absolute medians in O(log(M+N))." },
+            { title: "Reverse Linked List", diff: "Easy", desc: "Invert pointer node directions iteratively in memory." },
+            { title: "Merge Two Sorted Lists", diff: "Easy", desc: "Stitch list nodes sequentially keeping order metrics." },
+            { title: "Reorder List (Two Pointers)", diff: "Medium", desc: "Identify split midpoints, reverse second partitions, and weave nodes." },
+            { title: "Remove Nth Node From End", diff: "Medium", desc: "Route index offsets to target deletions in single sweeps." },
+            { title: "Copy List with Random Pointer", diff: "Medium", desc: "Clone deep adjacent pointers mapping using dictionary caches." },
+            { title: "Add Two Numbers (Linked Lists)", diff: "Medium", desc: "Sum node digits iteratively, carrying remainders to next links." },
+            { title: "Merge K Sorted Lists (Heaps)", diff: "Hard", desc: "Consolidate N lists utilizing min-priority heaps." },
+            { title: "Invert Binary Tree", diff: "Easy", desc: "Swap left and right node pointers recursively." },
+            { title: "Maximum Depth of Binary Tree", diff: "Easy", desc: "Calculate longest depth levels recursively using DFS." },
+            { title: "Same Tree (Trees)", diff: "Easy", desc: "Assert structural and value parity of two trees." },
+            { title: "Subtree of Another Tree", diff: "Easy", desc: "Verify sub-root matches inside parent tree environments." },
+            { title: "Lowest Common Ancestor of a BST", diff: "Medium", desc: "Locate branching nodes using target value ranges." },
+            { title: "Binary Tree Level Order Traversal", diff: "Medium", desc: "Queue node hierarchies level-by-level using BFS." },
+            { title: "Validate Binary Search Tree", diff: "Medium", desc: "Verify that left and right branches conform to search bounds." },
+            { title: "Kth Smallest Element in a BST", diff: "Medium", desc: "Traverse trees in-order to find target sorted keys." },
+            { title: "Construct Binary Tree from Preorder/Inorder", diff: "Medium", desc: "Rebuild nested hierarchies using preorder splitters." },
+            { title: "Serialize and Deserialize Binary Tree", diff: "Hard", desc: "Convert dynamic objects to text logs and back." },
+            { title: "Number of Islands (DFS)", diff: "Medium", desc: "Isolate contiguous land values in 2D array grids using DFS." },
+            { title: "Clone Graph (Graphs)", diff: "Medium", desc: "Clone deep adjacency list networks using map caching." },
+            { title: "Max Area of Island (DFS)", diff: "Medium", desc: "Determine maximum node counts inside island blocks." },
+            { title: "Course Schedule (Topological Sort)", diff: "Medium", desc: "Detect circular dependencies inside Directed Acyclic Graphs (DAGs)." },
+            { title: "Network Delay Time (Dijkstra)", diff: "Medium", desc: "Calculate shortest latency path delays using min-heaps." },
+            { title: "Min Cost to Connect All Points", diff: "Medium", desc: "Build Minimum Spanning Trees (MST) using Prim's algorithm." },
+            { title: "Swim in Rising Water (Dijkstra)", diff: "Hard", desc: "Optimize path routes to minimize max grid heights." },
+            { title: "Climbing Stairs (1D DP)", diff: "Easy", desc: "Map pathways using Fibonacci memoization." },
+            { title: "Min Cost Climbing Stairs", diff: "Easy", desc: "Compute optimized costs using 1D step memory." },
+            { title: "House Robber (1D DP)", diff: "Medium", desc: "Maximize state yields bypassing adjacent triggers." },
+            { title: "Longest Palindromic Substring", diff: "Medium", desc: "Isolate center intervals, expanding to locate matches." },
+            { title: "Unique Paths (2D DP)", diff: "Medium", desc: "Compute navigation arrays routing to target grid locations." },
+            { title: "Longest Common Subsequence", diff: "Medium", desc: "Align character indices across 2D comparison grids." },
+            { title: "Edit Distance (2D DP)", diff: "Hard", desc: "Compute minimal transformation steps converting S1 to S2." }
+        ];
+
+        // Specific high-signal engineering and math directories sorted by Phase
+        const PHASE_0_SYLLABUS = [
+            { t: "CPython Memory Labels", tags: ["Python"], th: "CPython variables as labels, reference pointers, and heap structures.", pr: "Write pointer tracking tests using standard id() checks." },
+            { t: "CPython Mutability Bounds", tags: ["Python"], th: "Evaluating Lists vs Tuples and CPython object immutability parameters.", pr: "Benchmark physical memory utilization comparing dynamic lists to immutable tuples." },
+            { t: "CPython Garbage Collector Tracing", tags: ["Python"], th: "How reference counts trigger dynamic memory release operations under circular configurations.", pr: "Trace active reference counts using sys.getrefcount." },
+            { t: "Python OOP & Magic Dunder Hooks", tags: ["Python"], th: "Defining Classes and custom __init__, __repr__, and __call__ dunder methods.", pr: "Code custom dunder classes transforming instances into callable execution modules." },
+            { t: "Memory Optimized slots", tags: ["Python"], th: "Eliminating object __dict__ buffers using __slots__ allocations to optimize object sizes.", pr: "Benchmark RAM utilization gains of slots allocations across million-instance loads." },
+            { t: "Asynchronous generators", tags: ["Python"], th: "Lazy sequence evaluations and dynamic streaming using yield context variables.", pr: "Stream mock text database rows to keep process memory <10MB." },
+            { t: "Context Managers", tags: ["Python"], th: "Defining resource allocation parameters and try-except error management boundaries.", pr: "Write manual context managers handling file operations safely." },
+            { t: "Vectorized NumPy Layouts", tags: ["Data Engineering"], th: "Contiguous arrays memory layouts vs pointer chains in python.", pr: "Build multi-dimensional slices demonstrating memory-address alignments." },
+            { t: "Matrix Striding Calculations", tags: ["Data Engineering"], th: "Slicing high-dimensional coordinates without copying data arrays.", pr: "Mutate NumPy views, tracking parent updates without memory duplication." },
+            { t: "Broadcasting Math Alignment", tags: ["Math"], th: "Evaluating coordinate alignment rules inside math operations.", pr: "Multiply custom matrices with automatic dimension expansions." },
+            { t: "Relational Joins in NumPy", tags: ["Data Engineering"], th: "Selecting database elements utilizing logical boolean index masks instead of loops.", pr: "Filter specific target vectors matching index-mask thresholds." },
+            { t: "SVD Matrix Decompositions", tags: ["Math"], th: "Factoring matrices to recover structural patterns and projection spaces.", pr: "Implement low-rank approximations via Singular Value Decomposition (SVD)." },
+            { t: "LoRA Sizing Projections", tags: ["Math"], th: "How low-rank adaptations optimize training parameter budgets.", pr: "Calculate exact byte reduction of parameter weights using rank=8 models." },
+            { t: "Probability Distributions", tags: ["Math"], th: "Conditional probability models, joint distributions, and Bayes Theorem.", pr: "Build a Naive Bayes classifier processing categorical datasets." },
+            { t: "Classical ML Regression", tags: ["ML (Classical)"], th: "The mathematical structures of linear regression models.", pr: "Code manual parameter updates minimizing Mean Squared Error (MSE)." },
+            { t: "ML Classifiers & Cross-Entropy", tags: ["ML (Classical)"], th: "The mathematics of logistic regression and cross-entropy loss functions.", pr: "Implement custom prediction classifications on test tables." },
+            { t: "Decision Tree Partitions", tags: ["ML (Classical)"], th: "Using Gini and entropy criteria to partition data structures.", pr: "Construct manual binary decision trees on structured categorical data." },
+            { t: "Train-Test Evaluations", tags: ["ML (Classical)"], th: "Methods for out-of-sample data partitioning.", pr: "Write a deterministic index-splitter to isolate testing partitions." },
+            { t: "Asymmetric Loss Evaluation", tags: ["ML (Classical)"], th: "Optimizing threshold metrics under high-risk constraints. Precision, Recall and F1-Score calculations.", pr: "Generate ROC-AUC curves tracking metric predictions." },
+            { t: "Validation Cross-Validation", tags: ["ML (Classical)"], th: "K-fold evaluation setups ensuring training stability.", pr: "Code a K-Fold index generator partitioning target data." },
+            { t: "Einsum Matrix Contractions", tags: ["Math"], th: "Summing dimensions without writing nested loop indices.", pr: "Write batch matrix multiplications using Einstein summation syntax." },
+            { t: "Information Theory", tags: ["Math"], th: "Shannon entropy formulations.", pr: "Calculate entropy values of multi-class probability datasets." },
+            { t: "Numerical Gradients", tags: ["Math"], th: "Approximating mathematical derivatives via finite differences.", pr: "Verify mathematical gradients with small epsilon differences." },
+            { t: "HPC Logging Diagnostics", tags: ["MLOps & Deployment"], th: "Python logging architectures.", pr: "Configure standard logging setups capturing validation metrics." },
+            { t: "JVM Spark-to-Tensor Serialization", tags: ["Data Engineering"], th: "Bridging JVM-based Apache Spark data shufflers to Python contiguous memory layouts.", pr: "Implement PyArrow serializers transmitting vector rows." }
+        ];
+
+        const PHASE_1_SYLLABUS = [
+            { t: "Neural Node Formulations", tags: ["DL (Deep Learning)"], th: "Mathematical representations of artificial neural nodes.", pr: "Write a raw single-neuron class computing forward steps." },
+            { t: "Jacobian Slope Matrices", tags: ["Math"], th: "Coordinating partial derivatives of vector-valued outputs.", pr: "Code Jacobian calculators tracking gradient directions." },
+            { t: "Matrix Chain Rule", tags: ["Math"], th: "Propagating derivatives through nested linear transformations.", pr: "Implement dL/dW = X.T x dL/dY on paper and verify using NumPy matrices." },
+            { t: "Backprop Layer Contracts", tags: ["DL (Deep Learning)"], th: "Evaluating linear projections backprop equations.", pr: "Construct manual fully-connected backward passes in Python." },
+            { t: "Activation Derivatives GELU", tags: ["DL (Deep Learning)"], th: "How non-linear functions shape gradient signals.", pr: "Write custom derivative calculators for GELU activation functions." },
+            { t: "Cross-Entropy Gradients", tags: ["Math"], th: "Mathematical updates of logarithmic loss metrics.", pr: "Code stable Cross-Entropy backpropagation steps." },
+            { t: "Optimization Mechanics SGD", tags: ["DL (Deep Learning)"], th: "Stochastic Gradient Descent (SGD) with momentum metrics.", pr: "Implement custom SGD optimization steps updating weights." },
+            { t: "AdamW Parameter Decays", tags: ["DL (Deep Learning)"], th: "Tracking adaptive learning rates with weight decay parameters.", pr: "Write manual AdamW update formulas from scratch." },
+            { t: "PyTorch Autograd Engines", tags: ["DL (Deep Learning)"], th: "How dynamic computation graphs trace execution paths.", pr: "Verify PyTorch gradient outputs against manual backward steps." },
+            { t: "Regularization Dropout", tags: ["DL (Deep Learning)"], th: "Reducing overfitting using stochastic mask layers.", pr: "Code a manual forward-backward dropout mask layer." },
+            { t: "Sequence Embeddings Lookup", tags: ["Transformers"], th: "Mapping vocabulary arrays to high-dimensional space.", pr: "Write custom embedding layer lookups with manual backward steps." },
+            { t: "RNN Network Architectures", tags: ["Transformers"], th: "Evaluating temporal dependencies across hidden states.", pr: "Code RNN cell loops in PyTorch, mapping hidden weights." },
+            { t: "RNN Backpropagation Paths", tags: ["Math"], th: "How temporal derivatives sum backprop updates.", pr: "Derive and write temporal backpropagation updates." },
+            { t: "LSTM Memory Gates", tags: ["Transformers"], th: "How forgetting, input, and output gates retain signals.", pr: "Code an LSTM model using standard tensors." },
+            { t: "Sequence Tokenizers BPE", tags: ["Transformers"], th: "Translating strings to index representations.", pr: "Write a manual byte-pair encoding (BPE) training loop." },
+            { t: "Named Entity Recognition (NER)", tags: ["DL (Deep Learning)"], th: "Classification systems locating entities in text arrays.", pr: "Train a custom LSTM-based NER network in PyTorch." }
+        ];
+
+        const PHASE_2_SYLLABUS = [
+            { t: "Attention Query-Key Math", tags: ["Transformers"], th: "Self-attention matrix formulas and dot product scaling.", pr: "Implement dot-product attention queries in PyTorch." },
+            { t: "Transformer Causal Masking", tags: ["Transformers"], th: "Applying lower triangular masks to prevent future token leaks.", pr: "Write causal masking blocks handling sequence boundaries." },
+            { t: "Multi-Head Attention Splits", tags: ["Transformers"], th: "Slicing queries, keys, and values into parallel projection spaces.", pr: "Code custom multi-head projection layers in PyTorch." },
+            { t: "Rotary Position Embeddings", tags: ["Transformers"], th: "Preserving positional parameters through 2D complex rotations.", pr: "Implement the RoPE rotation calculations inside attention blocks." },
+            { t: "GQA Attention Splitting", tags: ["Transformers"], th: "Grouping key-value projections to optimize inference bandwidth.", pr: "Build Grouped-Query Attention (GQA) head projections." },
+            { t: "SwiGLU Activation Layers", tags: ["Transformers"], th: "Gating operations inside feed-forward blocks.", pr: "Code custom SwiGLU activation networks manually." },
+            { t: "Chinchilla Scaling Limits", tags: ["LLM Lifecycle"], th: "Sizing dataset parameter bounds under fixed compute limits.", pr: "Verify compute efficiency parameters using scaling curves." },
+            { t: "Fine-Tuning LoRA Topologies", tags: ["LLM Lifecycle"], th: "Constructing low-rank adapter projections on frozen weights.", pr: "Write a manual forward loop inserting low-rank adapters." },
+            { t: "QLoRA Quantized Adapters", tags: ["LLM Lifecycle"], th: "Double-quantization methods for running SFT on low-end hardware.", pr: "Use TRL libraries to wrap base weights with low-precision updates." },
+            { t: "Unsloth High-Performance Tuning", tags: ["LLM Lifecycle"], th: "How Unsloth optimizes memory footprint and compile layouts.", pr: "Load base weights, setting up SFT adapters using Unsloth pipelines." },
+            { t: "RLHF Policy Alignments PPO", tags: ["LLM Lifecycle"], th: "Mathematical principles of Proximal Policy Optimization (PPO).", pr: "Implement policy gradient score metrics on generated outputs." },
+            { t: "Direct Preference Optimization", tags: ["LLM Lifecycle"], th: "Bypassing active reward models using DPO formulations.", pr: "Code direct log-likelihood loss functions measuring preference scores." },
+            { t: "KV Cache Page Allocator", tags: ["Inference & Serving"], th: "Sizing dynamic KV buffers to prevent token generation stalls.", pr: "Implement static KV cache cache limits inside PyTorch modules." },
+            { t: "Continuous Batching Schedulers", tags: ["Inference & Serving"], th: "Designing iteration-level schedulers inserting queries mid-sequence.", pr: "Simulate continuous batch execution streams." },
+            { t: "Speculative Decoding Verifiers", tags: ["Inference & Serving"], th: "Utilizing draft models to speed up large target weights generation.", pr: "Write speculative draft-target verification loops." },
+            { t: "Model Serving Pipeline Design", tags: ["System Design"], th: "Designing robust API barriers serving billion-scale requests.", pr: "Analyze latency logs under heavy query concurrencies." }
+        ];
+
+        const PHASE_3_SYLLABUS = [
+            { t: "GPU Microarchitecture Blocks", tags: ["GPU Physics & Triton"], th: "Analyzing Streaming Multiprocessors, Warp schedulers, and Tensor cores.", pr: "Evaluate arithmetic intensity using GPU profiling benchmarks." },
+            { t: "GPU Memory Latency Paths", tags: ["GPU Physics & Triton"], th: "The speed gaps between slow HBM, SRAM caches, and core Registers.", pr: "Evaluate data transfer latency overheads inside model steps." },
+            { t: "Warp Coalesced Reads", tags: ["GPU Physics & Triton"], th: "Coordinating contiguous 32-thread pointer operations in memory.", pr: "Audit tensor allocations, verifying block memory alignments." },
+            { t: "Triton Compiler JIT Pipelines", tags: ["GPU Physics & Triton"], th: "How Triton compiles Python blocks into PTX hardware instructions.", pr: "Write pointer offset allocations utilizing tl.arange and program-IDs." },
+            { t: "Triton Vector Add Kernels", tags: ["GPU Physics & Triton"], th: "Elementwise array additions inside register boundaries.", pr: "Build and run a custom Triton Vector Add GPU kernel." },
+            { t: "Fused Softmax Triton Kernels", tags: ["GPU Physics & Triton"], th: "Bypassing slow HBM writes by fusing exponentiation and reduction layers.", pr: "Code a fused Triton Softmax kernel running on SRAM." },
+            { t: "Fused LayerNorm Triton Kernels", tags: ["GPU Physics & Triton"], th: "Register-level normalization calculations.", pr: "Write custom forward Triton LayerNorm kernels." },
+            { t: "Tiled Matmul CUDA C++", tags: ["GPU Physics & Triton"], th: "Register and shared memory tile partitions inside thread-blocks.", pr: "Implement standard tiled matrix multiplications inside CUDA C++." },
+            { t: "FlashAttention Online Scaling", tags: ["GPU Physics & Triton"], th: "Computing softmax bounds dynamically to avoid global memory allocations.", pr: "Code online softmax updates tracking running log scales." },
+            { t: "ONNX Compilers Graph Optimizations", tags: ["MLOps & Deployment"], th: "Exporting network layouts to optimized graph intermediates.", pr: "Convert PyTorch models into ONNX configurations." },
+            { t: "TensorRT Compilation Engines", tags: ["MLOps & Deployment"], th: "Fusing operators and optimizing execution branches.", pr: "Compile ONNX layers into low-latency TensorRT engines." },
+            { t: "Docker Microservice Isolation", tags: ["MLOps & Deployment"], th: "Building lightweight model serving containers.", pr: "Write highly-optimized Dockerfiles with explicit CUDA-runtime targets." },
+            { t: "Kubernetes Pod Orchestrations", tags: ["MLOps & Deployment"], th: "Scheduling replica pods and configuring autoscaling nodes.", pr: "Draft YAML specs configuring load-balancing barriers." },
+            { t: "GPU Memory Partition Limits", tags: ["System Design"], th: "Sizing physical cluster memory bounds.", pr: "Calculate GPU partition requirements for 3D parallel layouts." }
+        ];
+
+        const PHASE_4_SYLLABUS = [
+            { t: "NCCL Ring All-Reduce Topologies", tags: ["Distributed Systems"], th: "Synchronizing sharded weights across multi-node GPU rings.", pr: "Simulate distributed rank communication transfers." },
+            { t: "FSDP ZeRO Sharding Layers", tags: ["Distributed Systems"], th: "Sharding weights, gradients, and optimizer states across ranks.", pr: "Wrap models using PyTorch FSDP distributed wrappers." },
+            { t: "DeepSeek-V3 Compressed MLA", tags: ["Distributed Systems"], th: "Low-rank latent expansions shrinking KV cache overheads.", pr: "Code query-key decompression matrices inside attention layers." },
+            { t: "vLLM PagedAttention Page Tables", tags: ["Inference & Serving"], th: "Solving VRAM fragmentation using operating system paging models.", pr: "Implement mock page table lookup index matches." },
+            { t: "Enterprise RAG Document Loading", tags: ["Applied AI & RAG"], th: "Document loaders, semantic chunking boundaries, and metadata mapping.", pr: "Build custom sliding-window chunk splitters." },
+            { t: "HNSW Vector Graph Indexes", tags: ["Applied AI & RAG"], th: "Navigating massive high-dimensional proximity networks in log-time.", pr: "Write HNSW proximity search routers traversing mock nodes." },
+            { t: "Hybrid Search Fusion Schemes", tags: ["Applied AI & RAG"], th: "Combining lexical BM25 indices with dense vector embeddings.", pr: "Build hybrid search pipelines scoring with Reciprocal Rank Fusion (RRF)." },
+            { t: "LangGraph Multi-Agent Loops", tags: ["AI Agents"], th: "Coordinating multi-agent cyclic state machines with persistent memory.", pr: "Code LangGraph state routing modules passing data between nodes." },
+            { t: "Model Context Protocol Tooling", tags: ["AI Agents"], th: "Secure host-server schema tool integrations.", pr: "Implement MCP connector schemas executing sandboxed instructions." },
+            { t: "Stripe Radar Case Study", tags: ["Case Studies"], th: "How Stripe executes real-time fraud ML under strict 100ms budgets.", pr: "Design fallback routing blocks for distributed prediction prediction latency limits." },
+            { t: "Netflix Candidate Rankers Case Study", tags: ["Case Studies"], th: "Analyzing two-stage candidate generation and scoring recommenders.", pr: "Draft candidate score-retrieval pipeline layouts." },
+            { t: "Airbnb Personalization Case Study", tags: ["Case Studies"], th: "Real-time session listings personalized ranking methods.", pr: "Trace real-time context streaming models." },
+            { t: "Pinterest Visual HNSW Case Study", tags: ["Case Studies"], th: "Sharding visual embeddings across billion-scale indexes.", pr: "Model distributed HNSW index shards." },
+            { t: "Uber Michelangelo Feature Store", tags: ["Case Studies"], th: "Mitigating training-serving feature store drift.", pr: "Design consistent offline-online feature synchronization loops." },
+            { t: "Distributed Cluster MFU Sizing", tags: ["System Design"], th: "Calculating hardware utilization limits on large pretraining setups.", pr: "Calculate model FLOPs utilization (MFU) thresholds." }
+        ];
+
+        let activeSelectedTag = ""; // Strict single-tag tracking
+        let roadmapData = [];
+
+        // Tab switching controller
+        function switchTab(tabId) {
+            const trackerTab = document.getElementById('tab-tracker-content');
+            const researchTab = document.getElementById('tab-research-content');
+            const btnTracker = document.getElementById('btn-tab-tracker');
+            const btnResearch = document.getElementById('btn-tab-research');
+
+            if (tabId === 'tracker') {
+                trackerTab.classList.remove('hidden');
+                researchTab.classList.add('hidden');
+                btnTracker.className = "px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-sm font-semibold transition-all shadow-md";
+                btnResearch.className = "px-4 py-2 bg-slate-800 hover:bg-slate-755 text-slate-300 rounded-lg text-sm font-semibold transition-all";
+            } else {
+                trackerTab.classList.add('hidden');
+                researchTab.classList.remove('hidden');
+                btnTracker.className = "px-4 py-2 bg-slate-800 hover:bg-slate-755 text-slate-300 rounded-lg text-sm font-semibold transition-all";
+                btnResearch.className = "px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-sm font-semibold transition-all shadow-md";
+            }
+        }
+
+        // Deterministic single-tag resolver matching syllabus patterns perfectly
+        function getPrimaryTag(dayNum, quarterNum) {
+            if (dayNum <= 30) {
+                // Month 0: Python & ML Foundations
+                if (dayNum % 5 === 0) return "DSA";
+                if (dayNum % 5 === 1) return "Python";
+                if (dayNum % 5 === 2) return "Data Engineering";
+                if (dayNum % 5 === 3) return "Math";
+                return "ML (Classical)";
+            } else if (dayNum <= 91) {
+                // Quarter 1: DL Math & Core PyTorch
+                if (dayNum % 4 === 0) return "DSA";
+                if (dayNum % 4 === 1) return "DL (Deep Learning)";
+                if (dayNum % 4 === 2) return "Math";
+                return "Transformers";
+            } else if (dayNum <= 182) {
+                // Quarter 2: Transformers & Fine-Tuning
+                if (dayNum % 5 === 0) return "DSA";
+                if (dayNum % 5 === 1) return "Transformers";
+                if (dayNum % 5 === 2) return "LLM Lifecycle";
+                if (dayNum % 5 === 3) return "Inference & Serving";
+                return "System Design";
+            } else if (dayNum <= 273) {
+                // Quarter 3: GPU Hardware, Triton & MLOps
+                if (dayNum % 4 === 0) return "DSA";
+                if (dayNum % 4 === 1) return "GPU Physics & Triton";
+                if (dayNum % 4 === 2) return "MLOps & Deployment";
+                return "System Design";
+            } else {
+                // Quarter 4: Distributed Systems & Case Studies
+                if (dayNum % 6 === 0) return "DSA";
+                if (dayNum % 6 === 1) return "Distributed Systems";
+                if (dayNum % 6 === 2) return "Applied AI & RAG";
+                if (dayNum % 6 === 3) return "AI Agents";
+                if (dayNum % 6 === 4) return "Case Studies";
+                return "System Design";
+            }
+        }
+
+        function initData() {
+            const cached = localStorage.getItem('roadmap_365_progress_v3');
+            if (cached) {
+                try {
+                    roadmapData = JSON.parse(cached);
+                    if (roadmapData && roadmapData.length === 365) {
+                        renderFilterBadges();
+                        return;
+                    }
+                } catch (e) {
+                    console.error("Cache parsing issue. Rebuilding database.");
+                }
+            }
+
+            roadmapData = [];
+            let currentDay = 1;
+
+            DYNAMIC_CURRICULUM_BLUEPRINT.forEach((blueprint) => {
+                const totalDaysInPhase = (blueprint.end - blueprint.start) + 1;
+                
+                for (let d = 0; d < totalDaysInPhase; d++) {
+                    const dayNum = currentDay;
+                    
+                    // Resolve strict single tag
+                    const primaryTag = getPrimaryTag(dayNum, blueprint.q);
+
+                    let topic = "Evaluating Systems Parameter Optimization";
+                    let theory = "";
+                    let practice = "Profile systems, evaluate parameters, and log metrics.";
+
+                    // Hydrate topics based on strict tag
+                    if (primaryTag === "DSA") {
+                        const dsaIndex = (dayNum - 1) % DSA_CHALLENGES_DB.length;
+                        const dsaItem = DSA_CHALLENGES_DB[dsaIndex];
+                        topic = `Algorithm: ${dsaItem.title}`;
+                        theory = `💡 [DSA Warmup challenge - ${dsaItem.diff}]: ${dsaItem.desc}\n\n📖 [Complexities Study]: Trace memory-stack usage under recursion and evaluate Big-O boundaries on execution passes.`;
+                        practice = `Code ${dsaItem.title} in clean Python, configuring explicit docstrings and assertions.`;
+                    } else {
+                        // Hydrate from specialized systems catalog matching phase quarter
+                        if (blueprint.q === 0) {
+                            const index = (dayNum - 1) % PHASE_0_SYLLABUS.length;
+                            const item = PHASE_0_SYLLABUS[index];
+                            topic = item.t;
+                            theory = item.th;
+                            practice = item.pr;
+                        } else if (blueprint.q === 1) {
+                            const index = (dayNum - 31) % PHASE_1_SYLLABUS.length;
+                            const item = PHASE_1_SYLLABUS[index];
+                            topic = item.t;
+                            theory = item.th;
+                            practice = item.pr;
+                        } else if (blueprint.q === 2) {
+                            const index = (dayNum - 92) % PHASE_2_SYLLABUS.length;
+                            const item = PHASE_2_SYLLABUS[index];
+                            topic = item.t;
+                            theory = item.th;
+                            practice = item.pr;
+                        } else if (blueprint.q === 3) {
+                            const index = (dayNum - 183) % PHASE_3_SYLLABUS.length;
+                            const item = PHASE_3_SYLLABUS[index];
+                            topic = item.t;
+                            theory = item.th;
+                            practice = item.pr;
+                        } else if (blueprint.q === 4) {
+                            const index = (dayNum - 274) % PHASE_4_SYLLABUS.length;
+                            const item = PHASE_4_SYLLABUS[index];
+                            topic = item.t;
+                            theory = item.th;
+                            practice = item.pr;
+                        }
+                    }
+
+                    roadmapData.push({
+                        day: dayNum,
+                        quarterNum: blueprint.q,
+                        quarter: blueprint.title,
+                        week: `Day ${dayNum}`,
+                        topic: topic,
+                        tag: primaryTag, // Strict Single Tag
+                        theory: theory,
+                        practice: practice,
+                        status: "Not Started",
+                        notes: ""
+                    });
+                    currentDay++;
+                }
+            });
+
+            saveData();
+            renderFilterBadges();
+        }
+
+        function saveData() {
+            localStorage.setItem('roadmap_365_progress_v3', JSON.stringify(roadmapData));
+            updateMetrics();
+        }
+
+        function updateMetrics() {
+            const completed = roadmapData.filter(d => d.status === 'Completed').length;
+            const pct = Math.round((completed / 365) * 100);
+            
+            document.getElementById('overallProgressPercent').innerText = `${pct}%`;
+            document.getElementById('progressRatio').innerText = `${completed}/365`;
+            document.getElementById('progressCircleFill').style.height = `${pct}%`;
+            document.getElementById('hoursDone').innerText = `${completed} / 365h`;
+
+            let activeQuarter = 0;
+            for (let i = 0; i < 365; i++) {
+                if (roadmapData[i].status !== 'Completed') {
+                    activeQuarter = roadmapData[i].quarterNum;
+                    break;
+                }
+            }
+            document.getElementById('currentPhaseLabel').innerText = PHASES[activeQuarter] || PHASES[4];
+
+            let streak = 0;
+            for (let i = 0; i < 365; i++) {
+                if (roadmapData[i].status === 'Completed') {
+                    streak++;
+                } else {
+                    break;
+                }
+            }
+            document.getElementById('streakLabel').innerText = `${streak} Days`;
+        }
+
+        // Render interactive category filter badges (strictly single-select)
+        function renderFilterBadges() {
+            const container = document.getElementById('topicBadgeContainer');
+            container.innerHTML = '';
+
+            TOPIC_TAGS.forEach(tag => {
+                const isSelected = activeSelectedTag === tag;
+                const button = document.createElement('button');
+                button.onclick = () => toggleTagFilter(tag);
+                
+                if (isSelected) {
+                    button.className = "px-3 py-1 bg-sky-500 text-slate-950 font-black text-xs rounded-full border border-sky-400 transition-all shadow-md shadow-sky-500/20";
+                } else {
+                    button.className = "px-3 py-1 bg-slate-950 hover:bg-slate-800 text-slate-350 font-semibold text-xs rounded-full border border-slate-850 hover:border-slate-700 transition-all";
+                }
+                button.innerText = tag;
+                container.appendChild(button);
+            });
+        }
+
+        function toggleTagFilter(tag) {
+            if (activeSelectedTag === tag) {
+                activeSelectedTag = ""; // Deselect
+            } else {
+                activeSelectedTag = tag; // Strict single selection
+            }
+            renderFilterBadges();
+            filterRoadmap();
+        }
+
+        function clearAllFilters() {
+            activeSelectedTag = "";
+            document.getElementById('phaseFilter').value = 'All';
+            document.getElementById('statusFilter').value = 'All';
+            document.getElementById('searchInput').value = '';
+            renderFilterBadges();
+            filterRoadmap();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('sheetBody');
+            tbody.innerHTML = '';
+
+            const phaseVal = document.getElementById('phaseFilter').value;
+            const statusVal = document.getElementById('statusFilter').value;
+            const searchVal = document.getElementById('searchInput').value.toLowerCase();
+
+            roadmapData.forEach((row) => {
+                // 1. Phase filter
+                if (phaseVal !== 'All' && row.quarterNum.toString() !== phaseVal) return;
+                
+                // 2. Status filter
+                if (statusVal !== 'All' && row.status !== statusVal) return;
+                
+                // 3. Text search
+                if (searchVal) {
+                    const content = (row.topic + ' ' + row.theory + ' ' + row.practice + ' ' + row.quarter + ' ' + row.tag).toLowerCase();
+                    if (!content.includes(searchVal)) return;
+                }
+
+                // 4. Strict Single Tag Filter
+                if (activeSelectedTag !== "" && row.tag !== activeSelectedTag) return;
+
+                const tr = document.createElement('tr');
+                let bgClass = "hover:bg-slate-800/40 transition-all";
+                if (row.status === "Completed") bgClass = "bg-teal-950/15 hover:bg-teal-950/30 border-l-2 border-l-emerald-500 transition-all";
+                if (row.status === "In Progress") bgClass = "bg-sky-950/15 hover:bg-sky-950/30 border-l-2 border-l-sky-500 transition-all";
+                
+                tr.className = `${bgClass} align-top border-b border-slate-800/40`;
+
+                const selectStyle = row.status === 'Completed' ? 'bg-emerald-900/40 text-emerald-300 border border-emerald-700/50' :
+                                    row.status === 'In Progress' ? 'bg-sky-950 text-sky-400 border border-sky-800/50' :
+                                    'bg-slate-900 text-slate-400 border border-slate-800';
+
+                // Single tag color pill
+                const tagPill = `<span onclick="forceSelectTag('${row.tag}')" class="inline-block text-[10px] bg-slate-950 border border-slate-800 hover:border-slate-700 text-sky-400 hover:text-sky-300 font-bold px-2.5 py-0.5 rounded cursor-pointer transition-all shadow-inner">${row.tag}</span>`;
+
+                const formattedTheory = row.theory.replace(/\n/g, '<br>');
+
+                tr.innerHTML = `
+                    <td class="p-3 text-center font-bold text-slate-500 border-r border-slate-800/60">${row.day}</td>
+                    <td class="p-3 border-r border-slate-800/60">
+                        <span class="block font-semibold text-slate-300 text-xs">${row.quarter}</span>
+                        <span class="block text-[10px] text-slate-500 mt-1 uppercase tracking-wider font-semibold">${row.week}</span>
+                    </td>
+                    <td class="p-3 font-bold text-slate-200 border-r border-slate-800/60">
+                        <div class="mb-2 text-slate-200">${row.topic}</div>
+                        <div class="flex flex-wrap">${tagPill}</div>
+                    </td>
+                    <td class="p-3 text-slate-400 leading-relaxed border-r border-slate-800/60 text-xs">${formattedTheory}</td>
+                    <td class="p-3 text-sky-300/90 leading-relaxed border-r border-slate-800/60 code-font text-[11px]">${row.practice}</td>
+                    <td class="p-3 text-center border-r border-slate-800/60">
+                        <select onchange="updateStatus(${row.day}, this.value)" class="text-xs font-bold rounded-lg px-2 py-1.5 focus:outline-none focus:ring-2 focus:ring-sky-500/50 w-full cursor-pointer ${selectStyle}">
+                            <option value="Not Started" ${row.status === 'Not Started' ? 'selected' : ''}>Not Started</option>
+                            <option value="In Progress" ${row.status === 'In Progress' ? 'selected' : ''}>In Progress</option>
+                            <option value="Completed" ${row.status === 'Completed' ? 'selected' : ''}>Completed</option>
+                        </select>
+                    </td>
+                    <td class="p-2">
+                        <textarea onblur="updateNotes(${row.day}, this.value)" placeholder="Micro-logs / code observations..." class="w-full bg-slate-950 border border-slate-800/60 hover:border-slate-700 rounded-lg p-2 text-xs text-slate-300 placeholder-slate-800 focus:outline-none focus:border-sky-500/80 resize-y h-12 transition-all">${row.notes || ''}</textarea>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function forceSelectTag(tag) {
+            activeSelectedTag = tag;
+            renderFilterBadges();
+            filterRoadmap();
+        }
+
+        function updateStatus(day, status) {
+            const idx = roadmapData.findIndex(d => d.day === day);
+            if (idx !== -1) {
+                roadmapData[idx].status = status;
+                saveData();
+                renderTable();
+            }
+        }
+
+        function updateNotes(day, notes) {
+            const idx = roadmapData.findIndex(d => d.day === day);
+            if (idx !== -1) {
+                roadmapData[idx].notes = notes;
+                saveData();
+            }
+        }
+
+        function filterRoadmap() {
+            renderTable();
+        }
+
+        function exportToCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            const headers = ["Day", "Phase", "Day Index", "Specific Topic", "Primary Tag", "Syllabus Theory & Warmup", "Practical Challenge", "Status", "Micro-Log"];
+            csvContent += headers.map(h => `"${h.replace(/"/g, '""')}"`).join(",") + "\n";
+            
+            roadmapData.forEach((row) => {
+                const line = [
+                    row.day.toString(),
+                    row.quarter,
+                    row.week,
+                    row.topic,
+                    row.tag,
+                    row.theory,
+                    row.practice,
+                    row.status,
+                    row.notes || ""
+                ];
+                csvContent += line.map(item => `"${item.replace(/"/g, '""')}"`).join(",") + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "deepmind_365_ai_systems_roadmap.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function openResetModal() {
+            document.getElementById('resetModal').classList.remove('hidden');
+        }
+
+        function closeResetModal() {
+            document.getElementById('resetModal').classList.add('hidden');
+        }
+
+        function confirmResetProgress() {
+            localStorage.removeItem('roadmap_365_progress_v3');
+            initData();
+            renderTable();
+            closeResetModal();
+        }
+
+        // Dynamic Channel Directory Rendering Logic
+        function renderDynamicChannels(filterCategory) {
+            const container = document.getElementById('dynamicChannelsContainer');
+            container.innerHTML = '';
+
+            const filtered = INTEL_RESEARCH_CHANNELS.filter(channel => {
+                if (filterCategory === 'all') return true;
+                return channel.category === filterCategory;
+            });
+
+            filtered.forEach(channel => {
+                const card = document.createElement('div');
+                card.className = "flex items-start justify-between p-3.5 bg-slate-950/60 rounded-lg border border-slate-850 hover:border-slate-800 transition-all";
+                card.innerHTML = `
+                    <div class="flex-1 mr-4">
+                        <div class="flex items-center gap-2">
+                            <h4 class="font-bold text-slate-200 text-sm">${channel.name}</h4>
+                            <span class="text-[9px] px-1.5 py-0.5 rounded bg-slate-900 border border-slate-800 text-sky-400 capitalize font-medium">${channel.category}</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1 leading-relaxed">${channel.desc}</p>
+                    </div>
+                    <a href="${channel.url}" target="_blank" class="px-3 py-1 bg-sky-950/40 hover:bg-sky-900/60 border border-sky-900 text-sky-455 hover:text-sky-300 text-xs rounded font-bold transition-all shrink-0 self-center">
+                        Go ↗
+                    </a>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        let paperLogs = [];
+
+        function loadPaperLogs() {
+            const cached = localStorage.getItem('research_paper_logs_v1');
+            if (cached) {
+                try {
+                    paperLogs = JSON.parse(cached);
+                } catch (e) {
+                    console.error(e);
+                }
+            } else {
+                paperLogs = [
+                    { title: "DeepSeek-V3 Technical Report", insight: "Demonstrates Multi-Head Latent Attention (MLA) compressing KV Cache projections to save critical HBM bandwidth." },
+                    { title: "FlashAttention-2: Faster Attention with Better Parallelism", insight: "Optimizes warp-level thread division and removes redundant scaling reductions inside online softmax blocks." }
+                ];
+            }
+            renderPaperLogs();
+        }
+
+        function savePaperLogs() {
+            localStorage.setItem('research_paper_logs_v1', JSON.stringify(paperLogs));
+            renderPaperLogs();
+        }
+
+        function addPaperLog() {
+            const titleInput = document.getElementById('paperTitleInput');
+            const notesInput = document.getElementById('paperNotesInput');
+
+            if (!titleInput.value.trim()) return;
+
+            paperLogs.push({
+                title: titleInput.value.trim(),
+                insight: notesInput.value.trim() || "No notes logged."
+            });
+
+            titleInput.value = '';
+            notesInput.value = '';
+            savePaperLogs();
+        }
+
+        function deletePaperLog(idx) {
+            paperLogs.splice(idx, 1);
+            savePaperLogs();
+        }
+
+        function renderPaperLogs() {
+            const tbody = document.getElementById('paperLogsTable');
+            tbody.innerHTML = '';
+
+            paperLogs.forEach((log, index) => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-800/40 hover:bg-slate-900/40 transition-all";
+                tr.innerHTML = `
+                    <td class="p-3 font-bold text-slate-250">${log.title}</td>
+                    <td class="p-3 text-slate-400">${log.insight}</td>
+                    <td class="p-3 text-center">
+                        <button onclick="deletePaperLog(${index})" class="text-rose-500 hover:text-rose-400 font-bold">Remove</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.onload = function() {
+            initData();
+            renderTable();
+            loadPaperLogs();
+            renderDynamicChannels('all'); // Load initial list
+        };
+    </script>
+</body>
+</html>
